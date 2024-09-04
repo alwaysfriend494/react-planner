@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Line,
   Area,
+  Zone,
   Vertex,
   Item,
   Group
@@ -11,13 +12,17 @@ import {
 export default function Layer({ layer, scene, catalog }) {
 
   let { unit, groups } = scene;
-  let { lines, areas, vertices, holes, id: layerID, items, opacity } = layer;
+  let { lines, areas, zones, vertices, holes, id: layerID, items, opacity } = layer;
 
   return (
     <g opacity={opacity}>
       {
         areas.valueSeq().map(area =>
           <Area key={area.id} layer={layer} area={area} unit={unit} catalog={catalog} />)
+      }
+      {
+        zones.valueSeq().map(zone =>
+          <Zone key={zone.id} layer={layer} zone={zone} unit={unit} catalog={catalog} />)
       }
       {
         lines.valueSeq().map(line =>

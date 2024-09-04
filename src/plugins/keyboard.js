@@ -62,7 +62,7 @@ export default function keyboard() {
           let selectedLayer = state.getIn(['scene', 'selectedLayer']);
           let selected = state.getIn(['scene', 'layers', selectedLayer, 'selected']);
 
-          if ( ( mode === MODE_IDLE || mode === MODE_3D_VIEW ) && (selected.holes.size || selected.areas.size || selected.items.size || selected.lines.size)) {
+          if ( ( mode === MODE_IDLE || mode === MODE_3D_VIEW ) && (selected.holes.size || selected.areas.size || selected.zones.size || selected.items.size || selected.lines.size)) {
             if (selected.holes.size) {
               let hole = state.getIn(['scene', 'layers', selectedLayer, 'holes', selected.holes.get(0)]);
               store.dispatch(copyProperties(hole.get('properties')));
@@ -70,6 +70,10 @@ export default function keyboard() {
             else if (selected.areas.size) {
               let area = state.getIn(['scene', 'layers', selectedLayer, 'areas', selected.areas.get(0)]);
               store.dispatch(copyProperties(area.properties));
+            }
+            else if (selected.zones.size) {
+              let zone = state.getIn(['scene', 'layers', selectedLayer, 'zones', selected.zones.get(0)]);
+              store.dispatch(copyProperties(zone.properties));
             }
             else if (selected.items.size) {
               let item = state.getIn(['scene', 'layers', selectedLayer, 'items', selected.items.get(0)]);

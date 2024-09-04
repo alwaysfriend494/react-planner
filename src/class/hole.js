@@ -255,7 +255,8 @@ class Hole {
 
     // Now I need min and max possible coordinates for the hole on the line. They depend on the width of the hole
 
-    let width = hole.properties.get('width').get('length');
+    let posX = hole.properties.get('width') || hole.properties.get('radius');
+    let width = posX.get('length');
     let lineLength = GeometryUtils.pointsDistance(v0.x, v0.y, v1.x, v1.y);
     let alpha = Math.atan2(Math.abs(v1.y - v0.y), Math.abs(v1.x - v0.x));
 

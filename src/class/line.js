@@ -37,6 +37,9 @@ class Line{
     }, properties);
 
     state = state.setIn(['scene', 'layers', layerID, 'lines', lineID], line);
+    if (type == 'wall') {
+      state = Line.setProperties( state, layerID, lineID, { height: { length: state.getIn(['scene', 'layers', layerID]).height } }).updatedState;
+    }
 
     return {updatedState: state, line};
   }
@@ -297,7 +300,6 @@ class Line{
   }
 
   static endDrawingLine(state, x, y) {
-
     if (state.snapMask && !state.snapMask.isEmpty()) {
       let snap = SnapUtils.nearestSnap(state.snapElements, x, y, state.snapMask);
       if (snap) ({x, y} = snap.point);
@@ -313,8 +315,11 @@ class Line{
 
     state = Line.remove( state, layerID, lineID ).updatedState;
     state = Line.createAvoidingIntersections( state, layerID, line.type, v0.x, v0.y, x, y ).updatedState;
-    state = Layer.detectAndUpdateAreas( state, layerID ).updatedState;
-
+    if (line.type == 'wall') {
+      state = Layer.detectAndUpdateAreas( state, layerID ).updatedState;
+    } else if (line.type == 'line') {
+      state = Layer.detectAndUpdateZones( state, layerID ).updatedState;
+    }
     state = state.merge({
       mode: MODE_WAITING_DRAWING_LINE,
       snapElements: new List(),
@@ -518,6 +523,7 @@ class Line{
     }
 
     state = Layer.detectAndUpdateAreas( state, layerID ).updatedState;
+    // state = Layer.detectAndUpdateZones( state, layerID ).updatedState;
 
     state = state.merge({
       mode: MODE_IDLE,
@@ -574,6 +580,7 @@ class Line{
     }
 
     state = Layer.detectAndUpdateAreas( state, layerID ).updatedState;
+    // state = Layer.detectAndUpdateZones( state, layerID ).updatedState;
 
     return { updatedState: state };
   }

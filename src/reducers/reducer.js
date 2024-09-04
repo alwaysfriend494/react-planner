@@ -7,12 +7,14 @@ import {
   HOLE_ACTIONS,
   LINE_ACTIONS,
   AREA_ACTIONS,
+  ZONE_ACTIONS,
   SCENE_ACTIONS,
   VERTEX_ACTIONS
 } from '../constants';
 
 import {
   ReactPlannerAreasReducer,
+  ReactPlannerZonesReducer,
   ReactPlannerHolesReducer,
   ReactPlannerItemsReducer,
   ReactPlannerLinesReducer,
@@ -36,6 +38,7 @@ export default function appReducer(state, action) {
   if( HOLE_ACTIONS[action.type] ) return ReactPlannerHolesReducer(...arguments);
   if( LINE_ACTIONS[action.type] ) return ReactPlannerLinesReducer(...arguments);
   if( AREA_ACTIONS[action.type] ) return ReactPlannerAreasReducer(...arguments);
+  if( ZONE_ACTIONS[action.type] ) return ReactPlannerZonesReducer(...arguments);
   if( GROUP_ACTIONS[action.type] ) return ReactPlannerGroupsReducer(...arguments);
   if( SCENE_ACTIONS[action.type] ) return ReactPlannerSceneReducer(...arguments);
   if( VERTEX_ACTIONS[action.type] ) return ReactPlannerVerticesReducer(...arguments);

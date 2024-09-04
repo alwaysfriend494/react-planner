@@ -7,6 +7,7 @@ import * as sceneActions from './scene-actions';
 import * as verticesActions from './vertices-actions';
 import * as itemsActions from './items-actions';
 import * as areaActions from './area-actions';
+import * as zoneActions from './zone-actions';
 import * as groupsActions from './groups-actions';
 
 export {
@@ -19,6 +20,7 @@ export {
   verticesActions,
   itemsActions,
   areaActions,
+  zoneActions,
   groupsActions
 };
 
@@ -32,5 +34,6 @@ export default {
   verticesActions,
   itemsActions,
   areaActions,
+  zoneActions,
   groupsActions
 };

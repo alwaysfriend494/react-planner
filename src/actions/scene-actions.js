@@ -7,10 +7,10 @@ export function selectLayer(layerID) {
   }
 }
 
-export function addLayer(name, altitude) {
+export function addLayer(name, layerID) {
   return {
     type: ADD_LAYER,
-    name, altitude
+    layerID, name
   }
 }
 
@@ -22,9 +22,11 @@ export function setLayerProperties(layerID, properties) {
   }
 }
 
-export function removeLayer(layerID) {
+export function removeLayer(layerID, altitude, height) {
   return {
     type: REMOVE_LAYER,
     layerID,
+    altitude,
+    height
   }
 }

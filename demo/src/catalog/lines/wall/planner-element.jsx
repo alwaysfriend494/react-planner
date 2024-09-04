@@ -40,5 +40,25 @@ const textures = {
   },
 };
 
-export default ElementsFactories.WallFactory('wall', info, textures);
+const customProperties = {
+  numVoile: {
+    label: 'Num Voile',
+    type: 'number',
+    defaultValue: 0,
+    min: 0,
+  },
+  charge: {
+    label: 'Charge (t/m)',
+    type: 'float',
+    defaultValue: 0,
+    min: 0
+  },
+  porteur: {
+    label: 'Porteur',
+    type: 'hidden',
+    defaultValue: false
+  }
+}
+
+export default ElementsFactories.WallFactory('wall', info, textures, customProperties);
 

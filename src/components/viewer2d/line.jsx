@@ -44,11 +44,12 @@ export default function Line({line, layer, scene, catalog}) {
   let thickness = line.getIn(['properties', 'thickness', 'length']);
   let half_thickness = thickness / 2;
 
-  let renderedLine = catalog.getElement(line.type).render2D(line, layer);
+  let renderedLine = catalog.getElement(line.type).render2D(line, layer, angle);
   let renderedRuler = line.selected ?
     <Ruler unit={scene.unit} length={length} transform={`translate(0, ${half_thickness + 10} )`}/> : null;
 
   return (
+    
     <g
       transform={`translate(${x1}, ${y1}) rotate(${angle}, 0, 0)`}
       data-element-root

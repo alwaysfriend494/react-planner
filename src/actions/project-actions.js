@@ -32,7 +32,8 @@ import {
   ADD_CIRCULAR_GUIDE,
   REMOVE_HORIZONTAL_GUIDE,
   REMOVE_VERTICAL_GUIDE,
-  REMOVE_CIRCULAR_GUIDE
+  REMOVE_CIRCULAR_GUIDE,
+  SET_CHIFFRAGE
 } from '../constants';
 
 export function loadProject(sceneJSON) {
@@ -277,4 +278,11 @@ export function removeCircularGuide( guideID ) {
     type: REMOVE_CIRCULAR_GUIDE,
     guideID
   };
+}
+
+export function setChiffrage(layerID, prototype, elementID, properties) {
+  return {
+    type: SET_CHIFFRAGE,
+    layerID, prototype, elementID, properties
+  }
 }

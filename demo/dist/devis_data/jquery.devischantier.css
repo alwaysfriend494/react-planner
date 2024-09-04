@@ -1,0 +1,301 @@
+.so_element {
+	overflow: hidden;
+	min-height: 300px;
+}
+
+.so_element table.so_main_table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.so_element table.so_main_table td {
+	border: 1px solid #ccc;
+}
+
+.so_element {
+	width: 100%;
+}
+
+
+.so_element .ds_column input, .ds_column textarea {
+	width: 100%;
+	border: 0px;
+	padding: 8px;
+	background: transparent;
+}
+
+.so_element .type_line_note textarea {
+	font-style: italic;
+}
+
+.so_element .type_line_section input, .so_element .type_line_section .so_num {
+	font-weight: bold;
+	font-size: 1.2em;
+}
+
+.so_element .actions div {
+	display: inline-block;
+	margin: 2px 4px 2px 4px;
+}
+
+.so_element .so_num {
+	width: 5%;
+	padding: 8px;
+}
+
+.so_element .sortable-selected .so_num {
+	background: #eee;
+}
+
+
+.so_element .so_product_quantity, .so_element .so_completion, .so_element .so_product_unit_price, .so_element .so_product_equation, .so_element .so_prix_revient_unitaire, .so_element .so_vetuste {
+	width: 7.5% !important;
+}
+
+.so_element .so_product_total_price, .so_element .so_prix_revient_total {
+	width: 10% !important;
+}
+
+
+.so_element .so_product_unit {
+	width: 5%;
+}
+
+.so_element .so_actions {
+	width: 15%;
+	text-align: right;
+}
+
+.history_area, .select_model_area {
+	margin-top: 20px;
+}
+
+.so_element .type_line_section, .type_line_section input, .type_line_section textarea {
+	background: #f5f5f5;
+}
+
+.so_element tr {
+	display: table-row !important;
+}
+
+.so_element thead {
+	position: sticky;
+	top: 0;
+}
+
+.so_totals {
+	float: right;
+	border-collapse: collapse;
+	width: 25%;
+}
+
+.so_totals select, #select_history {
+	width: auto;
+	display: inline-block;
+}
+
+
+.so_totals td {
+	padding: 5px;
+}
+
+.so_total_ht td {
+	border-top: 1px solid grey;
+}
+
+.so_total_taxes td {
+	padding-bottom: 15px;
+}
+
+.so_total_ttc td {
+	border-top: 1px solid grey;
+}
+
+.so_element .product_unit_price, .so_element .product_quantity, .so_element .product_total_price, .so_element .product_prix_revient_unitaire, .so_element .product_prix_revient_total {
+	text-align: right;
+}
+
+.so_element .action_add_section, .so_element .action_add_product , .so_element .action_add_comment, .so_element .action_add_subproduct {
+	display: inline-block;
+	background-size: contain;
+	width: 20px;
+	height: 16px;
+	vertical-align: -0.2em;
+}
+
+.action_add_section {
+	background: url(imgs/section.png);
+}
+
+.action_add_product {
+	background: url(imgs/article.png);
+}
+
+.action_add_subproduct {
+	background: url(imgs/subarticle.png);
+}
+
+.action_add_comment {
+	background: url(imgs/commentaire.png);
+}
+
+.so_completion, .so_vetuste {
+	display: none;
+}
+
+.so_totals_value {
+	text-align: right;
+}
+
+.so_element textarea {
+    height: 2.3em;
+}
+
+.so_element input[type=number] {
+    -moz-appearance:textfield;
+    -webkit-appearance: none;
+    appearance: textfield;
+}
+
+.type_line_subproduct .so_num {
+	color: grey;
+	padding-left: 16px;
+}
+
+.type_line_subproduct .product_description {
+	padding-left: 3em;
+}
+
+.so_element .so_popup_container {
+	display: none;
+}
+
+.so_element .so_popup_container.active {
+	display: block;
+}
+
+.so_element .so_popup_container {
+	background: rgba(0,0,0,0.5);
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	z-index: 1;
+}
+
+.so_element .so_popup_container .so_popup {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-left: -512px;
+	margin-top: -300px;
+	width: 1024px;
+	height: 600px;
+	background: white;
+	overflow: auto;
+}
+
+.so_search_table tbody tr {
+	cursor: pointer;
+}
+
+.so_search_table tbody tr:hover {
+	background: #eee;
+}
+
+.so_parameters {
+	text-align: right;
+}
+
+#is_debourse {
+	height: 1em;
+	width: 1em;
+}
+
+.so_prix_revient_total, .so_prix_revient_unitaire, #add_subproduct {
+	display: none;
+}
+
+.action_add_subproduct {
+	display: none !important;
+}
+
+.so_is_debourse .so_prix_revient_total, .so_is_debourse .so_prix_revient_unitaire, .so_is_debourse #add_subproduct {
+	display: revert;
+}
+
+.so_is_debourse tr.type_false .action_add_subproduct, .so_is_debourse tr.type_ .action_add_subproduct, .so_is_debourse tr.type_line_subproduct .action_add_subproduct {
+	display: inline-block !important;
+}
+
+.so_element.no_model .select_model_area {
+	display: none;
+}
+
+.so_element.no_history .history_area {
+	display: none;
+}
+
+.so_element.no_debourse .so_debourse_area {
+	display: none;
+}
+
+
+.so_element.no_equation .so_product_equation, .so_element.no_equation .equation_col {
+	display: none;
+}
+
+.percentage_container{
+	display: none;
+}
+
+/* CR CHANTIER */
+.cr_chantier .so_product_unit_price,
+.cr_chantier .so_product_total_price,
+.cr_chantier .so_actions,
+.cr_chantier .so_product_unit_price_th,
+.cr_chantier .so_product_total_price_th,
+.cr_chantier .so_actions_th,
+.cr_chantier .so_actions_tab,
+.cr_chantier .so_totals {
+	display: none;
+}
+.cr_chantier .so_completion{
+	display: table-cell;
+	width: 40%!important;
+	min-width: 150px!important;
+}
+/* .cr_chantier .percentage_avancement,.cr_chantier .span_percentage_avancement{
+	display: block;
+}*/
+
+.cr_chantier .percentage_container{
+	display: block;
+}
+
+
+.show_vetuste .so_vetuste {
+	display: table-cell;
+}
+ 
+.percentage_avancement, .span_percentage_avancement{
+	/* text-align: center; */
+    margin-bottom: 0;
+    font-weight: bold;
+	width: 102px;
+    color: rgb(45, 46, 45);
+    padding-right: 0;
+    text-align: right;
+    margin-right: 0;
+}
+
+.so_total_ht_popup {
+	position: fixed;
+	top: 5em;
+	right: 0em;
+	padding: 1em;
+	background: #000000ee;
+	color: white;
+	font-weight: bold;
+}

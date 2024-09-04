@@ -41,6 +41,16 @@ export default {
       defaultValue: {
         length: 30
       }
+    },
+    cost: {
+      label: 'cost(€)',
+      type: 'float',
+      defaultValue: 0
+    },
+    devis_data: {
+      label: 'devis_data',
+      type: 'hidden',
+      defaultValue: ''
     }
   },
 

@@ -36,7 +36,7 @@ class Project{
 
   static loadProject(state, sceneJSON) {
     state = new State({ scene: sceneJSON, catalog: state.catalog.toJS() });
-
+    state = state.updateIn(['scene', 'layers'], layers => layers.sort( ( a, b ) => a.altitude !== b.altitude ? b.altitude - a.altitude : b.order - a.order ));
     return { updatedState: state };
   }
 
@@ -95,6 +95,7 @@ class Project{
     selectedItems.forEach(itemID => { state = Item.remove( state, selectedLayer, itemID ).updatedState; });
 
     state = Layer.detectAndUpdateAreas( state, selectedLayer ).updatedState;
+    state = Layer.detectAndUpdateZones( state, selectedLayer ).updatedState;
 
     return { updatedState: state };
   }
@@ -273,6 +274,12 @@ class Project{
 
   static removeCircularGuide( state, guideID ){
     console.log('removeing horizontal guide ', guideID);
+
+    return { updatedState: state };
+  }
+
+  static setChiffrage( state, layerID, prototype, elementID, properties ) {
+    state = state.mergeIn(['scene', 'layers', layerID, prototype, elementID, 'properties'], properties);
 
     return { updatedState: state };
   }

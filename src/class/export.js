@@ -5,6 +5,7 @@ import Line from './line';
 import Hole from './hole';
 import Vertex from './vertex';
 import Area from './area';
+import Zone from './zone';
 import Item from './item';
 import { HorizontalGuide, VerticalGuide } from './guide';
 
@@ -16,6 +17,7 @@ export {
   Hole,
   Vertex,
   Area,
+  Zone,
   Item,
   HorizontalGuide,
   VerticalGuide
@@ -29,6 +31,7 @@ export default {
   Hole,
   Vertex,
   Area,
+  Zone,
   Item,
   HorizontalGuide,
   VerticalGuide

@@ -90,7 +90,7 @@ function extractElementData(node) {
 
 export default function Viewer2D(
   { state, width, height },
-  { viewer2DActions, linesActions, holesActions, verticesActions, itemsActions, areaActions, projectActions, catalog }) {
+  { viewer2DActions, linesActions, holesActions, verticesActions, itemsActions, areaActions, zoneActions, projectActions, catalog }) {
 
 
   let { viewer2D, mode, scene } = state;
@@ -192,6 +192,31 @@ export default function Viewer2D(
   let onMouseUp = viewerEvent => {
     let event = viewerEvent.originalEvent;
 
+    if (event.target.tagName == 'SELECT') {
+      const selectElement = event.target;
+      
+      selectElement.focus();
+      selectElement.size = 2;
+
+      return;
+    }
+
+    if (event.target.tagName == 'OPTION') {
+      const optionElement = event.target;
+      const selectElement = optionElement.parentNode;
+      
+      selectElement.size = 1;
+      selectElement.value = event.target.value;
+
+      const changeEvent = new Event('change', {
+        bubbles: true,    // Ensures the event bubbles up the DOM tree
+        cancelable: true  // Allows the event to be canceled
+      });
+      selectElement.dispatchEvent(changeEvent);
+
+      return;
+    }
+
     let evt = new Event('mouseup-planner-event');
     evt.viewerEvent = viewerEvent;
     document.dispatchEvent(evt);
@@ -208,6 +233,10 @@ export default function Viewer2D(
         switch (elementData ? elementData.prototype : 'none') {
           case 'areas':
             areaActions.selectArea(elementData.layer, elementData.id);
+            break;
+
+          case 'zones':
+            zoneActions.selectZone(elementData.layer, elementData.id);
             break;
 
           case 'lines':
@@ -394,6 +423,7 @@ Viewer2D.contextTypes = {
   verticesActions: PropTypes.object.isRequired,
   itemsActions: PropTypes.object.isRequired,
   areaActions: PropTypes.object.isRequired,
+  zoneActions: PropTypes.object.isRequired,
   projectActions: PropTypes.object.isRequired,
   catalog: PropTypes.object.isRequired,
 };

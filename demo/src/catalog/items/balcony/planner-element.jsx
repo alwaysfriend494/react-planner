@@ -112,6 +112,16 @@ export default {
       label: '2D color',
       type: 'color',
       defaultValue: '#f5f4f4'
+    },
+    cost: {
+      label: 'cost(€)',
+      type: 'float',
+      defaultValue: 0
+    },
+    devis_data: {
+      label: 'devis_data',
+      type: 'hidden',
+      defaultValue: ''
     }
   },
 

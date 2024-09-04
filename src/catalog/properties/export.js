@@ -2,6 +2,7 @@ import PropertyColor from './property-color';
 import PropertyEnum from './property-enum';
 import PropertyString from './property-string';
 import PropertyNumber from './property-number';
+import PropertyFloat from './property-float';
 import PropertyLengthMeasure from './property-lenght-measure';
 import PropertyToggle from './property-toggle';
 import PropertyCheckbox from './property-checkbox';
@@ -13,6 +14,7 @@ export {
   PropertyEnum,
   PropertyString,
   PropertyNumber,
+  PropertyFloat,
   PropertyLengthMeasure,
   PropertyToggle,
   PropertyCheckbox,
@@ -25,6 +27,7 @@ export default {
   PropertyEnum,
   PropertyString,
   PropertyNumber,
+  PropertyFloat,
   PropertyLengthMeasure,
   PropertyToggle,
   PropertyCheckbox,

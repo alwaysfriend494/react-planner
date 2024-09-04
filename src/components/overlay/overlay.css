@@ -1,0 +1,79 @@
+:root {
+    --button-border-color: #000;
+    --button-background-color: #fff;
+    --button-hover-background-color: #f0f0f0;
+    --button-fontSize: 15px;
+    --button-height: auto;
+    --button-padding: 10px;
+    --button-border: 2px solid var(--button-border-color);
+    --button-cursor: pointer;
+}
+
+.right-menu {
+    position: absolute;
+    right: 301px;
+    bottom: 21px;
+    overflow: hidden;
+    padding: 15px;
+    display: grid;
+    gap: 10px;
+    margin: 0 auto;
+    background-color: var(--button-background-color);
+    border: 2px solid var(--button-border-color);
+}
+
+.button-layer{
+    display: flex;
+    gap: 10px;
+}
+
+.layer-button,
+.copy-button,
+.control-button,
+.header-button {
+    padding: var(--button-padding);
+    height: var(--button-height);
+    font-size: var(--button-fontSize);
+    border: var(--button-border);
+    cursor: var(--button-cursor);
+    background-color: var(--button-background-color);
+}
+
+.layer-button:hover,
+.copy-button:hover,
+.control-button:hover,
+.header-button:hover {
+    background-color: #f0f0f0;
+}
+
+.header {
+    width: 100%;
+}
+
+.header-button {
+    width: 100%;
+}
+
+.layer-button {
+    width: 135px;
+}
+
+.layer-input {
+    width: 70px;
+}
+
+.copy-button {
+    width: 50px;
+}
+
+.control-button {
+    width: 60px;
+}
+
+
+
+.button-control {
+    display: flex;
+    justify-content: space-between;
+    width: 135px;
+}

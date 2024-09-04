@@ -1,4 +1,5 @@
 import ReactPlannerAreasReducer from './areas-reducer';
+import ReactPlannerZonesReducer from './zones-reducer';
 import ReactPlannerHolesReducer from './holes-reducer';
 import ReactPlannerItemsReducer from './items-reducer';
 import ReactPlannerLinesReducer from './lines-reducer';
@@ -11,6 +12,7 @@ import ReactPlannerViewer3dReducer from './viewer3d-reducer';
 
 export {
   ReactPlannerAreasReducer,
+  ReactPlannerZonesReducer,
   ReactPlannerHolesReducer,
   ReactPlannerItemsReducer,
   ReactPlannerLinesReducer,
@@ -24,6 +26,7 @@ export {
 
 export default {
   ReactPlannerAreasReducer,
+  ReactPlannerZonesReducer,
   ReactPlannerHolesReducer,
   ReactPlannerItemsReducer,
   ReactPlannerLinesReducer,

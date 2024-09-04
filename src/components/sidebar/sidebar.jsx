@@ -44,7 +44,8 @@ export default function Sidebar({ state, width, height, sidebarComponents }) {
     selected.items.size > 1 ||
     selected.holes.size > 1 ||
     selected.areas.size > 1 ||
-    selected.lines.size + selected.items.size + selected.holes.size + selected.areas.size > 1;
+    selected.zones.size > 1 ||
+    selected.lines.size + selected.items.size + selected.holes.size + selected.areas.size + selected.zones.size > 1;
 
   let selectedGroup = state.getIn(['scene', 'groups']).findEntry( g => g.get('selected') );
 

@@ -52,6 +52,11 @@ export const AREA_MESH_COLOR = {
   unselected: '#F5F4F4'
 };
 
+export const ZONE_MESH_COLOR = {
+  selected: MESH_SELECTED,
+  unselected: '#F5F4F4'
+};
+
 export const LINE_MESH_COLOR = {
   selected: MESH_SELECTED,
   unselected: '#8E9BA2'

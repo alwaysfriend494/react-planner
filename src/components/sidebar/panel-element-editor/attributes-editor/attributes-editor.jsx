@@ -37,6 +37,8 @@ export default function AttributesEditor({element, onUpdate, onValid, attributeF
             />;
     case 'areas':
       return null;
+    case 'zones':
+      return null;
 
   }
 

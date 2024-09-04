@@ -10,6 +10,7 @@ import {objectsMap} from './utils/objects-utils';
 import {
   ToolbarComponents,
   Content,
+  Overlay,
   SidebarComponents,
   FooterBarComponents
 } from './components/export';
@@ -69,6 +70,7 @@ class ReactPlanner extends Component {
       <div style={{...wrapperStyle, height}}>
         <Toolbar width={toolbarW} height={toolbarH} state={extractedState} {...props} />
         <Content width={contentW} height={contentH} state={extractedState} {...props} onWheel={event => event.preventDefault()} />
+        <Overlay right={sidebarW} bottom={footerBarH} state={extractedState} {...props} />
         <Sidebar width={sidebarW} height={sidebarH} state={extractedState} {...props} />
         <FooterBar width={width} height={footerBarH} state={extractedState} {...props} />
       </div>

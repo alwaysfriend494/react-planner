@@ -1,5 +1,5 @@
 import { List } from 'immutable';
-import { Project, Area, Line, Hole, Item, Vertex } from './export';
+import { Project, Area, Zone, Line, Hole, Item, Vertex } from './export';
 import {
   GraphInnerCycles,
   GeometryUtils,
@@ -11,15 +11,35 @@ const sameSet = (set1, set2) => set1.size === set2.size && set1.isSuperset(set2)
 
 class Layer{
 
-  static create( state, name, altitude ) {
-    let layerID = IDBroker.acquireID();
+  static create( state, name, layerID ) {
+  
     name = name || `layer ${layerID}`;
-    altitude = altitude || 0;
+    let altitude = 0;
+
+    const filteredLayers = state.getIn(['scene', 'layers']).filter(layer => layer.order === 1);
+
+    filteredLayers.map(([layerID, layer]) => {
+      if (altitude <= layer[1]) {
+        altitude = layer[1] + 300;
+      }
+    });
+
+    if (altitude == 0) {
+      altitude = 300;
+    }
+    
 
     let layer = new LayerModel({ id: layerID, name, altitude });
 
     state = state.setIn(['scene', 'selectedLayer'], layerID );
     state = state.setIn(['scene', 'layers', layerID], layer);
+    
+    state.getIn(['scene', 'layers']).map(layer => {
+      if (layer.order > 1) {
+        state = state.mergeIn(['scene', 'layers', layer.id], {altitude: layer.altitude + 300});       
+      }
+    });
+    state = state.updateIn(['scene', 'layers'], layers => layers.sort( ( a, b ) => a.altitude !== b.altitude ? b.altitude - a.altitude : b.order - a.order ));
 
     return { updatedState: state };
   }
@@ -45,30 +65,67 @@ class Layer{
   }
 
   static unselectAll( state, layerID ) {
-    let { lines, holes, items, areas } = state.getIn(['scene', 'layers', layerID]);
+    let { lines, holes, items, areas, zones } = state.getIn(['scene', 'layers', layerID]);
 
     if( lines ) lines.forEach( line => { state = Line.unselect( state, layerID, line.id ).updatedState; });
     if( holes ) holes.forEach( hole => { state = Hole.unselect( state, layerID, hole.id ).updatedState; });
     if( items ) items.forEach( item => { state = Item.unselect( state, layerID, item.id ).updatedState; });
     if( areas ) areas.forEach( area => { state = Area.unselect( state, layerID, area.id ).updatedState; });
+    if( zones ) zones.forEach( zone => { state = Zone.unselect( state, layerID, zone.id ).updatedState; });
 
     return { updatedState: state };
   }
 
   static setProperties( state, layerID, properties ) {
+    let originLayer = state.getIn(['scene', 'layers', layerID]);
     state = state.mergeIn(['scene', 'layers', layerID], properties);
-    state = state.updateIn(['scene', 'layers'], layers => layers.sort( ( a, b ) => a.altitude !== b.altitude ? a.altitude - b.altitude : a.order - b.order ));
+    let { height } = properties;
+    
+    if (height != undefined) {
+      if (originLayer.order >= 0) {
+        state.getIn(['scene', 'layers']).map(layer => {
+          if (layer.order >= originLayer.order && layer.altitude > originLayer.altitude) {
+            state = state.mergeIn(['scene', 'layers', layer.id], {altitude: layer.altitude + height - originLayer.height});
+          }
+        });
+      } else {
+        state.getIn(['scene', 'layers']).map(layer => {
+          if (layer.order <= originLayer.order && layer.altitude <= originLayer.altitude) {
+            state = state.mergeIn(['scene', 'layers', layer.id], {altitude: layer.altitude - height + originLayer.height});       
+          }
+        });
+      }
+
+      //Change the height of each wall of the layer.
+      state.getIn(['scene', 'layers', layerID, 'lines']).map(line=>{
+        if (line.type == 'wall' && line.name == 'Wall') {
+          state = Line.setProperties( state, layerID, line.id, { height: { length: height } }).updatedState;
+        }
+      })
+
+      return { updatedState: state };     
+    }
+
+    state = state.updateIn(['scene', 'layers'], layers => layers.sort( ( a, b ) => a.altitude !== b.altitude ? b.altitude - a.altitude : b.order - a.order ));
 
     return { updatedState: state };
   }
 
-  static remove( state, layerID ) {
+  static remove( state, layerID, altitude, height ) {
     state = state.removeIn(['scene', 'layers', layerID]);
+
+    state.getIn(['scene', 'layers']).map(layer => {
+      if (layer.altitude > altitude) {
+        state = state.mergeIn(['scene', 'layers', layer.id], {altitude: layer.altitude - height});       
+      }
+    });
 
     state = state.setIn(
       ['scene', 'selectedLayer'],
       state.scene.selectedLayer !== layerID ? state.scene.selectedLayer : state.scene.layers.first().id
     );
+
+    state = state.updateIn(['scene', 'layers'], layers => layers.sort( ( a, b ) => a.altitude !== b.altitude ? b.altitude - a.altitude : b.order - a.order ));
 
     return { updatedState: state };
   }
@@ -179,6 +236,106 @@ class Layer{
     return { updatedState: state };
   }
 
+  static detectAndUpdateZones( state, layerID ) {
+    
+    let verticesArray = [];           //array with vertices coords
+    let linesArray;                   //array with edges
+
+    let vertexID_to_verticesArrayIndex = {};
+    let verticesArrayIndex_to_vertexID = {};
+
+    state.getIn(['scene', 'layers', layerID, 'vertices']).forEach(vertex => {
+      let verticesCount = verticesArray.push([vertex.x, vertex.y]);
+      let latestVertexIndex = verticesCount - 1;
+      vertexID_to_verticesArrayIndex[vertex.id] = latestVertexIndex;
+      verticesArrayIndex_to_vertexID[latestVertexIndex] = vertex.id;
+    });
+
+    linesArray = state.getIn(['scene', 'layers', layerID, 'lines'])
+      .map(line => line.vertices.map(vertexID => vertexID_to_verticesArrayIndex[vertexID]).toArray());
+
+    let innerCyclesByVerticesArrayIndex = GraphInnerCycles.calculateInnerCycles(verticesArray, linesArray);
+
+    let innerCyclesByVerticesID = new List(innerCyclesByVerticesArrayIndex)
+      .map(cycle => new List(cycle.map(vertexIndex => verticesArrayIndex_to_vertexID[vertexIndex])));
+
+    // All zone vertices should be ordered in counterclockwise order
+    innerCyclesByVerticesID = innerCyclesByVerticesID.map( ( zone ) =>
+      GraphInnerCycles.isClockWiseOrder( zone.map(vertexID => state.getIn(['scene', 'layers', layerID, 'vertices', vertexID]) ) ) ? zone.reverse() : zone
+    );
+
+    let zoneIDs = [];
+
+    //remove zones
+    state.getIn(['scene', 'layers', layerID, 'zones']).forEach(zone => {
+      let zoneInUse = innerCyclesByVerticesID.some(vertices => sameSet(vertices, zone.vertices));
+      if (!zoneInUse) {
+        state = Zone.remove( state, layerID, zone.id ).updatedState;
+      }
+    });
+
+    //add new zones
+    innerCyclesByVerticesID.forEach((cycle, ind) => {
+      let zoneInUse = state.getIn(['scene', 'layers', layerID, 'zones']).find(zone => sameSet(zone.vertices, cycle));
+
+      if (zoneInUse) {
+        zoneIDs[ind] = zoneInUse.id;
+        state = state.setIn(['scene', 'layers', layerID, 'zones', zoneIDs[ind], 'holes'], new List());
+      } else {
+        let zoneVerticesCoords = cycle.map(vertexID => state.getIn(['scene', 'layers', layerID, 'vertices', vertexID]));
+        let resultAdd = Zone.add(state, layerID, 'zone', zoneVerticesCoords, state.catalog);
+
+        zoneIDs[ind] = resultAdd.zone.id;
+        state = resultAdd.updatedState;
+      }
+    });
+
+    // Build a relationship between zones and their coordinates
+    let verticesCoordsForZone = zoneIDs.map(id => {
+      let vertices = state.getIn(['scene', 'layers', layerID, 'zones', id]).vertices.map(vertexID => {
+        let { x, y } = state.getIn(['scene', 'layers', layerID, 'vertices', vertexID]);
+        return new List([x,y]);
+      });
+      return { id, vertices };
+    });
+
+    // Find all holes for an zone
+    let i, j;
+    for (i = 0; i < verticesCoordsForZone.length; i++) {
+      let holesList = new List(); // The holes for this zone
+      let zoneVerticesList = verticesCoordsForZone[i].vertices.flatten().toArray();
+      for (j = 0; j < verticesCoordsForZone.length; j++) {
+        if (i !== j) {
+          let isHole = GeometryUtils.ContainsPoint(zoneVerticesList,
+            verticesCoordsForZone[j].vertices.get(0).get(0),
+            verticesCoordsForZone[j].vertices.get(0).get(1));
+          if (isHole) {
+            holesList = holesList.push(verticesCoordsForZone[j].id);
+          }
+        }
+      }
+      state = state.setIn(['scene', 'layers', layerID, 'zones', verticesCoordsForZone[i].id, 'holes'], holesList);
+    }
+
+    // Remove holes which are already holes for other zones
+    zoneIDs.forEach(zoneID => {
+      let doubleHoles = new Set();
+      let zoneHoles = state.getIn(['scene', 'layers', layerID, 'zones', zoneID, 'holes']);
+      zoneHoles.forEach((zoneHoleID) => {
+        let holesOfholes = state.getIn(['scene', 'layers', layerID, 'zones', zoneHoleID, 'holes']);
+        holesOfholes.forEach((holeID) => {
+          if (zoneHoles.indexOf(holeID) !== -1) doubleHoles.add(holeID);
+        });
+      });
+      doubleHoles.forEach(doubleHoleID => {
+        zoneHoles = zoneHoles.remove( zoneHoles.indexOf(doubleHoleID) );
+      });
+      state = state.setIn(['scene', 'layers', layerID, 'zones', zoneID, 'holes'], zoneHoles);
+    });
+
+    return { updatedState: state };
+  }
+
   static removeZeroLengthLines( state, layerID ) {
     let updatedState = state.getIn(['scene', 'layers', layerID, 'lines']).reduce(
       ( newState, line ) =>
@@ -247,7 +404,20 @@ class Layer{
         reduced
       );
 
-      state = Vertex.remove( biReduced, layerID, doubleVertex.id, null, null, true ).updatedState;
+      let zoneReduced = doubleVertex.zones.reduce(
+        ( reducedState, zoneID ) => {
+
+          reducedState = reducedState.updateIn(['scene', 'layers', layerID, 'zones', zoneID, 'vertices'], vertices => {
+            if( vertices ) return vertices.map(v => v === doubleVertex.id ? vertexID : v);
+          });
+          reducedState = Vertex.addElement( reducedState, layerID, vertexID, 'zones', zoneID ).updatedState;
+
+          return reducedState;
+        },
+        reduced
+      );
+
+      state = Vertex.remove( biReduced, zoneReduced, layerID, doubleVertex.id, null, null, true ).updatedState;
     });
 
     return { updatedState: state };
@@ -259,6 +429,7 @@ class Layer{
     selected.lines.forEach(lineID => state = Line.setProperties(state, layerID, lineID, properties).updatedState);
     selected.holes.forEach(holeID => state = Hole.setProperties(state, layerID, holeID, properties).updatedState);
     selected.areas.forEach(areaID => state = Area.setProperties(state, layerID, areaID, properties).updatedState);
+    selected.zones.forEach(zoneID => state = Zone.setProperties(state, layerID, zoneID, properties).updatedState);
     selected.items.forEach(itemID => state = Item.setProperties(state, layerID, itemID, properties).updatedState);
 
     return { updatedState: state };
@@ -270,6 +441,7 @@ class Layer{
     selected.lines.forEach(lineID => state = Line.updateProperties(state, layerID, lineID, properties).updatedState);
     selected.holes.forEach(holeID => state = Hole.updateProperties(state, layerID, holeID, properties).updatedState);
     selected.areas.forEach(areaID => state = Area.updateProperties(state, layerID, areaID, properties).updatedState);
+    selected.zones.forEach(zoneID => state = Zone.updateProperties(state, layerID, zoneID, properties).updatedState);
     selected.items.forEach(itemID => state = Item.updateProperties(state, layerID, itemID, properties).updatedState);
 
     return { updatedState: state };

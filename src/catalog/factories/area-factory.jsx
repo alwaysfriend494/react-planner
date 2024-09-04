@@ -5,7 +5,7 @@ import Translator from '../../translator/translator';
 
 let translator = new Translator();
 
-export default function AreaFactory(name, info, textures) {
+export default function AreaFactory(name, info, textures, customProperties) {
 
   let areaElement = {
     name,
@@ -29,6 +29,16 @@ export default function AreaFactory(name, info, textures) {
         defaultValue: {
           length: 0,
         }
+      },
+      cost: {
+        label: 'cost(€)',
+        type: 'float',
+        defaultValue: 0
+      },
+      devis_data: {
+        label: 'devis_data',
+        type: 'hidden',
+        defaultValue: ''
       }
     },
     render2D: function (element, layer, scene) {
@@ -81,6 +91,18 @@ export default function AreaFactory(name, info, textures) {
       values: textureValues
     };
 
+  }
+
+  if (customProperties) {
+    Object.entries(customProperties).map(([key, value]) => {
+      const processedValues = {};
+
+      Object.entries(value).map(([fieldKey, fieldValue]) => {
+        processedValues[fieldKey] = fieldValue;
+      });
+
+      areaElement.properties[key] = processedValues
+    });
   }
 
   return areaElement

@@ -86,6 +86,15 @@ class Vertex{
       else {
         state = state.deleteIn(['scene', 'layers', layerID, 'vertices', vertexID]);
       }
+
+      inUse = vertex.zones.size || vertex.lines.size;
+
+      if( inUse && !forceRemove ) {
+        state = state.setIn(['scene', 'layers', layerID, 'vertices', vertexID], vertex);
+      }
+      else {
+        state = state.deleteIn(['scene', 'layers', layerID, 'vertices', vertexID]);
+      }
     }
 
     return { updatedState: state };
@@ -204,6 +213,7 @@ class Vertex{
     }
 
     state = Layer.detectAndUpdateAreas( state, layerID ).updatedState;
+    state = Layer.detectAndUpdateZones( state, layerID ).updatedState;
 
     state = state.merge({
       mode: draggingSupport.get('previousMode'),

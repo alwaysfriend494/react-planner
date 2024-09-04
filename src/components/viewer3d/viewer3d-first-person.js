@@ -39,6 +39,7 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     let actions = {
       areaActions: this.context.areaActions,
+      zoneActions: this.context.zoneActions,
       holesActions: this.context.holesActions,
       itemsActions: this.context.itemsActions,
       linesActions: this.context.linesActions,
@@ -288,6 +289,7 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     let actions = {
       areaActions: this.context.areaActions,
+      zoneActions: this.context.zoneActions,
       holesActions: this.context.holesActions,
       itemsActions: this.context.itemsActions,
       linesActions: this.context.linesActions,
@@ -329,6 +331,7 @@ Viewer3DFirstPerson.propTypes = {
 
 Viewer3DFirstPerson.contextTypes = {
   areaActions: PropTypes.object.isRequired,
+  zoneActions: PropTypes.object.isRequired,
   holesActions: PropTypes.object.isRequired,
   itemsActions: PropTypes.object.isRequired,
   linesActions: PropTypes.object.isRequired,

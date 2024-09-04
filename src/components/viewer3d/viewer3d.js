@@ -28,6 +28,7 @@ export default class Scene3DViewer extends React.Component {
 
     let actions = {
       areaActions: this.context.areaActions,
+      zoneActions: this.context.zoneActions,
       holesActions: this.context.holesActions,
       itemsActions: this.context.itemsActions,
       linesActions: this.context.linesActions,
@@ -168,6 +169,7 @@ export default class Scene3DViewer extends React.Component {
 
     let actions = {
       areaActions: this.context.areaActions,
+      zoneActions: this.context.zoneActions,
       holesActions: this.context.holesActions,
       itemsActions: this.context.itemsActions,
       linesActions: this.context.linesActions,
@@ -202,6 +204,7 @@ Scene3DViewer.propTypes = {
 
 Scene3DViewer.contextTypes = {
   areaActions: PropTypes.object.isRequired,
+  zoneActions: PropTypes.object.isRequired,
   holesActions: PropTypes.object.isRequired,
   itemsActions: PropTypes.object.isRequired,
   linesActions: PropTypes.object.isRequired,

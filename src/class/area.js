@@ -38,6 +38,27 @@ class Area{
     state = Layer.select( state, layerID ).updatedState;
     state = Layer.selectElement( state, layerID, 'areas', areaID ).updatedState;
 
+    let linesOfArea = [];
+    let verticesOfArea = state.getIn(['scene', 'layers', layerID, 'areas', areaID, 'vertices']);
+    verticesOfArea.map(verticeID => {
+      let verticeOfArea = state.getIn(['scene', 'layers', layerID, 'vertices', verticeID]);
+      linesOfArea.push(...verticeOfArea.lines.toArray());
+    });
+
+    const countWalls = {};  
+    linesOfArea.forEach(element => {
+      countWalls[element] = (countWalls[element] || 0) + 1;
+    });
+
+    const wallsOfArea = [];
+    for (const [key, value] of Object.entries(countWalls)) {
+        if (value === 2) {
+            wallsOfArea.push(key); // Add the number (as a number type)
+        }
+    }
+
+    console.log(wallsOfArea);
+    
     return {updatedState: state};
   }
 

@@ -47,6 +47,7 @@ export class ElementsSet extends Record({
   lines: new List(),
   holes: new List(),
   areas: new List(),
+  zones: new List(),
   items: new List(),
 }, 'ElementsSet') {
   constructor(json = {}) {
@@ -55,6 +56,7 @@ export class ElementsSet extends Record({
       lines: new List(json.lines || []),
       holes: new List(json.holes || []),
       areas: new List(json.areas || []),
+      zones: new List(json.zones || []),
       items: new List(json.items || [])
     });
   }
@@ -78,12 +80,14 @@ export class Vertex extends Record({
   y: -1,
   prototype: 'vertices',
   lines: new List(),
+  zones: new List(),
   areas: new List()
 }, 'Vertex') {
   constructor(json = {}) {
     super({
       ...json,
       lines: new List(json.lines || []),
+      zones: new List(json.zones || []),
       areas: new List(json.areas || [])
     });
   }
@@ -134,6 +138,21 @@ export class Area extends Record({
   }
 }
 
+export class Zone extends Record({
+  ...sharedAttributes,
+  prototype: 'zones',
+  vertices: new List(),
+  holes: new List()
+}, 'Zone') {
+  constructor(json = {}) {
+    super({
+      ...json,
+      properties: fromJS(json.properties || {}),
+      vertices: new List(json.vertices || [])
+    });
+  }
+}
+
 export class Item extends Record({
   ...sharedAttributes,
   prototype: 'items',
@@ -152,7 +171,8 @@ export class Item extends Record({
 export class Layer extends Record({
   id: '',
   altitude: 0,
-  order: 0,
+  order: 1,
+  height: 300,
   opacity: 1,
   name: '',
   visible: true,
@@ -160,6 +180,7 @@ export class Layer extends Record({
   lines: new Map(),
   holes: new Map(),
   areas: new Map(),
+  zones: new Map(),
   items: new Map(),
   selected: new ElementsSet(),
 }, 'Layer') {
@@ -170,6 +191,7 @@ export class Layer extends Record({
       lines: safeLoadMapList(json.lines, Line),
       holes: safeLoadMapList(json.holes, Hole),
       areas: safeLoadMapList(json.areas, Area),
+      zones: safeLoadMapList(json.zones, Zone),
       items: safeLoadMapList(json.items, Item),
       selected: new ElementsSet(json.selected)
     });
@@ -195,7 +217,12 @@ export class Group extends Record({
 
 
 export const DefaultLayers = new Map({
-  'layer-1': new Layer({id: 'layer-1', name: 'default'})
+  'layer-1': new Layer({id: 'layer-1', name: 'Toit', altitude: 900, order: 3}),
+  'layer-2': new Layer({id: 'layer-2', name: 'Comble', altitude: 600, order: 2}),
+  'layer-6': new Layer({id: 'layer-6', name: 'R+1', altitude: 300, order: 1}),
+  'layer-3': new Layer({id: 'layer-3', name: 'RdC', altitude: 0, order: 0}),
+  'layer-4': new Layer({id: 'layer-4', name: 'VS', altitude: -300, order: -1}),
+  'layer-5': new Layer({id: 'layer-5', name: 'TRVX', altitude: -600, order: -2}),
 });
 
 
@@ -271,6 +298,9 @@ export class Catalog extends Record({
 
       case 'areas':
         return new Area(options).merge({properties});
+
+      case 'zones':
+        return new Zone(options).merge({properties});
 
       case 'items':
         return new Item(options).merge({properties});

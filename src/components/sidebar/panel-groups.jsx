@@ -99,6 +99,7 @@ export default class PanelGroups extends Component {
                       'lines': layer.get('lines'),
                       'items': layer.get('items'),
                       'holes': layer.get('holes'),
+                      'zones': layer.get('zones'),
                       'areas': layer.get('areas')
                     };
 

@@ -26,7 +26,18 @@ export default {
     image: require('./sofa.png')
   },
 
-  properties: {},
+  properties: {
+    cost: {
+      label: 'cost(€)',
+      type: 'float',
+      defaultValue: 0
+    },
+    devis_data: {
+      label: 'devis_data',
+      type: 'hidden',
+      defaultValue: ''
+    }
+  },
 
   render2D: function (element, layer, scene) {
     let angle = element.rotation + 90;

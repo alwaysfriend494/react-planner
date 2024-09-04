@@ -93,12 +93,15 @@ export default class ElementEditor extends Component {
         let {x: x0, y: y0} = layer.vertices.get(line.vertices.get(0));
         let {x: x1, y: y1} = layer.vertices.get(line.vertices.get(1));
         let lineLength = GeometryUtils.pointsDistance(x0, y0, x1, y1);
-        let startAt = lineLength * element.offset - element.properties.get('width').get('length') / 2;
+
+        let posX = element.properties.get('width') || element.properties.get('radius');
+
+        let startAt = lineLength * element.offset - posX.get('length') / 2;
+        let endAt = lineLength - lineLength * element.offset - posX.get('length') / 2;
 
         let _unitA = element.misc.get('_unitA') || this.context.catalog.unit;
         let _lengthA = convert(startAt).from(this.context.catalog.unit).to(_unitA);
 
-        let endAt = lineLength - lineLength * element.offset - element.properties.get('width').get('length') / 2;
         let _unitB = element.misc.get('_unitB') || this.context.catalog.unit;
         let _lengthB = convert(endAt).from(this.context.catalog.unit).to(_unitB);
 
@@ -117,6 +120,9 @@ export default class ElementEditor extends Component {
         });
       }
       case 'areas': {
+        return new Map({});
+      }
+      case 'zones': {
         return new Map({});
       }
       default:
@@ -207,7 +213,8 @@ export default class ElementEditor extends Component {
 
             let alpha = GeometryUtils.angleBetweenTwoPoints(x0, y0, x1, y1);
             let lineLength = GeometryUtils.pointsDistance(x0, y0, x1, y1);
-            let widthLength = this.props.element.properties.get('width').get('length');
+            let posX = this.props.element.properties.get('width') || this.props.element.properties.get('radius');
+            let widthLength = posX.get('length');
             let halfWidthLength = widthLength / 2;
 
             let lengthValue = value.get('length');
@@ -253,7 +260,8 @@ export default class ElementEditor extends Component {
 
             let alpha = GeometryUtils.angleBetweenTwoPoints(x0, y0, x1, y1);
             let lineLength = GeometryUtils.pointsDistance(x0, y0, x1, y1);
-            let widthLength = this.props.element.properties.get('width').get('length');
+            let posX = this.props.element.properties.get('width') || this.props.element.properties.get('radius');
+            let widthLength = posX.get('length');
             let halfWidthLength = widthLength / 2;
 
             let lengthValue = value.get('length');
@@ -305,6 +313,15 @@ export default class ElementEditor extends Component {
   updateProperty(propertyName, value) {
     let {state: {propertiesFormData}} = this;
     propertiesFormData = propertiesFormData.setIn([propertyName, 'currentValue'], value);
+    if (propertiesFormData.getIn(['chargeSurfacique', 'currentValue']) != undefined) {
+      let natureToiture = parseFloat(propertiesFormData.getIn(['natureToiture', 'currentValue']).split(" ")[0]);
+      let naturePlanchers = parseFloat(propertiesFormData.getIn(['naturePlanchers', 'currentValue']).split(" ")[0]);
+      let natureRevetements = parseFloat(propertiesFormData.getIn(['natureRevetements', 'currentValue']).split(" ")[0]);
+      let chargeExploitation = parseFloat(propertiesFormData.getIn(['chargeExploitation', 'currentValue']).split(" ")[0]);
+      let aleasClimatiques = parseFloat(propertiesFormData.getIn(['aleasClimatiques', 'currentValue']).split(" ")[0]);
+      
+      propertiesFormData = propertiesFormData.setIn(['chargeSurfacique', 'currentValue'], natureToiture + naturePlanchers + natureRevetements + chargeExploitation + aleasClimatiques)
+    }
     this.setState({propertiesFormData});
     this.save({propertiesFormData});
   }
@@ -319,7 +336,7 @@ export default class ElementEditor extends Component {
       let properties = propertiesFormData.map(data => {
         return data.get('currentValue');
       });
-
+      
       this.context.projectActions.setProperties(properties);
     }
 

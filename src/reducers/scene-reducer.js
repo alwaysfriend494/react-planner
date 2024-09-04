@@ -13,7 +13,7 @@ export default function (state, action) {
 
   switch (action.type) {
     case ADD_LAYER:
-      return Layer.create( state, action.name, action.altitude).updatedState;
+      return Layer.create( state, action.name, action.layerID).updatedState;
 
     case SELECT_LAYER:
       return Layer.select( state, action.layerID ).updatedState;
@@ -22,7 +22,7 @@ export default function (state, action) {
       return Layer.setProperties( state, action.layerID, action.properties ).updatedState;
 
     case REMOVE_LAYER:
-      return Layer.remove( state, action.layerID ).updatedState;
+      return Layer.remove( state, action.layerID, action.altitude, action.height ).updatedState;
 
     default:
       return state;

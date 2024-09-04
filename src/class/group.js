@@ -4,6 +4,7 @@ import {
   Hole,
   Item,
   Area,
+  Zone,
   Layer,
   Vertex
 } from './export';
@@ -25,11 +26,13 @@ class Group{
       let holes = groupLayerElements.get('holes');
       let items = groupLayerElements.get('items');
       let areas = groupLayerElements.get('areas');
+      let zones = groupLayerElements.get('zones');
 
       if( lines ) lines.forEach( lineID => { state = Line.select( state, groupLayerID, lineID ).updatedState; });
       if( holes ) holes.forEach( holeID => { state = Hole.select( state, groupLayerID, holeID ).updatedState; });
       if( items ) items.forEach( itemID => { state = Item.select( state, groupLayerID, itemID ).updatedState; });
       if( areas ) areas.forEach( areaID => { state = Area.select( state, groupLayerID, areaID ).updatedState; });
+      if( zones ) zones.forEach( zoneID => { state = Zone.select( state, groupLayerID, zoneID ).updatedState; });
     });
 
     state = Project.setAlterate( state ).updatedState;
@@ -69,6 +72,7 @@ class Group{
         'lines': layer.get('lines').filter( el => el.get('selected') ),
         'items': layer.get('items').filter( el => el.get('selected') ),
         'holes': layer.get('holes').filter( el => el.get('selected') ),
+        'zones': layer.get('zones').filter( el => el.get('selected') ),
         'areas': layer.get('areas').filter( el => el.get('selected') )
       };
 
@@ -121,6 +125,7 @@ class Group{
       let holes = groupLayerElements.get('holes');
       let items = groupLayerElements.get('items');
       let areas = groupLayerElements.get('areas');
+      let zones = groupLayerElements.get('zones');
 
       if( lines ) lines.forEach( ( lineID ) => {
         let vertices = state.getIn(['scene', 'layers', groupLayerID, 'lines', lineID, 'vertices'])
@@ -160,6 +165,16 @@ class Group{
         let areaVertices = state.getIn(['scene', 'layers', groupLayerID, 'areas', areaID, 'vertices'])
           .map( vID => state.getIn(['scene', 'layers', groupLayerID, 'vertices', vID]) ).toJS();
         let { x, y } = GeometryUtils.verticesMidPoint( areaVertices );
+
+        xBar += x;
+        yBar += y;
+        elementCount++;
+      });
+
+      if( zones ) zones.forEach( zoneID => {
+        let zoneVertices = state.getIn(['scene', 'layers', groupLayerID, 'zones', zoneID, 'vertices'])
+          .map( vID => state.getIn(['scene', 'layers', groupLayerID, 'vertices', vID]) ).toJS();
+        let { x, y } = GeometryUtils.verticesMidPoint( zoneVertices );
 
         xBar += x;
         yBar += y;
@@ -215,9 +230,10 @@ class Group{
       let holes = groupLayerElements.get('holes');
       let items = groupLayerElements.get('items');
       let areas = groupLayerElements.get('areas');
+      let zones = groupLayerElements.get('zones');
 
       if( lines ) {
-        lines.forEach( lineID => {
+        lines.forEach( (lineID) => {
           state = Line.remove( state, groupLayerID, lineID ).updatedState;
           state = Layer.detectAndUpdateAreas( state, groupLayerID ).updatedState;
         });
@@ -279,6 +295,7 @@ class Group{
       //if( areas ) areas.forEach( areaID => { state = Area.select( state, groupLayerID, areaID ).updatedState; });
 
       state = Layer.detectAndUpdateAreas( state, groupLayerID ).updatedState;
+      state = Layer.detectAndUpdateZones( state, groupLayerID ).updatedState;
     });
 
     state = this.setBarycenter( state, groupID, x, y ).updatedState;
@@ -304,6 +321,7 @@ class Group{
       let holes = groupLayerElements.get('holes');
       let items = groupLayerElements.get('items');
       let areas = groupLayerElements.get('areas');
+      let zones = groupLayerElements.get('zones');
 
       //move vertices instead lines avoiding multiple vertex translation
       if( lines ) {
@@ -341,6 +359,7 @@ class Group{
       //if( areas ) areas.forEach( areaID => { state = Area.select( state, groupLayerID, areaID ).updatedState; });
 
       state = Layer.detectAndUpdateAreas( state, groupLayerID ).updatedState;
+      state = Layer.detectAndUpdateZones( state, groupLayerID ).updatedState;
     });
 
     state = Group.select( state, groupID ).updatedState;
