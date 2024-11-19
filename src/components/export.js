@@ -6,6 +6,7 @@ import FooterBarComponents from './footerbar/export';
 import DevisData from './devis_data/devis_data';
 import Viewer2DComponents from './viewer2d/export';
 import StyleComponents from './style/export';
+import ProjectInformationModal from './ProjectInformationModal';
 
 export {
   ToolbarComponents,
@@ -15,7 +16,8 @@ export {
   FooterBarComponents,
   DevisData,
   Viewer2DComponents,
-  StyleComponents
+  StyleComponents,
+  ProjectInformationModal
 };
 
 export default {
@@ -26,5 +28,6 @@ export default {
   FooterBarComponents,
   DevisData,
   Viewer2DComponents,
-  StyleComponents
+  StyleComponents,
+  ProjectInformationModal
 };

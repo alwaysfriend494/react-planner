@@ -12,7 +12,8 @@ import {
   Content,
   Overlay,
   SidebarComponents,
-  FooterBarComponents
+  FooterBarComponents,
+  ProjectInformationModal
 } from './components/export';
 import {VERSION} from './version';
 import './styles/export';
@@ -68,6 +69,7 @@ class ReactPlanner extends Component {
 
     return (
       <div style={{...wrapperStyle, height}}>
+        <ProjectInformationModal />
         <Toolbar width={toolbarW} height={toolbarH} state={extractedState} {...props} />
         <Content width={contentW} height={contentH} state={extractedState} {...props} onWheel={event => event.preventDefault()} />
         <Overlay right={sidebarW} bottom={footerBarH} state={extractedState} {...props} />
