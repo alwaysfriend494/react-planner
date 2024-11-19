@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import PreviewImage from "../preview.png";
 
 const ProjectInformationModal = () => {
   const [visibleModal, setVisibleModal] = useState(true);
@@ -42,9 +41,9 @@ const ProjectInformationModal = () => {
       >
         ✖
       </button>
-      <div style={{}}>This project is cloned from <a target="_blank" href="https://github.com/cvdlab/react-planner">https://github.com/cvdlab/react-planner</a></div>
+      <div style={{}}>This project is updated from <a target="_blank" href="https://github.com/cvdlab/react-planner">https://github.com/cvdlab/react-planner</a></div>
       <div style={{}}>You can see last project through <a target="_blank" href="https://cvdlab.github.io/react-planner/">https://cvdlab.github.io/react-planner</a></div>
-      <img src={PreviewImage} width={500} alt="Preview Image"/>
+      <img src="https://github.com/cvdlab/react-planner/blob/master/preview.png" width={500} alt="Preview Image"/>
     </div>
   )
 }
