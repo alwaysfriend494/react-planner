@@ -4,7 +4,7 @@ const ProjectInformationModal = () => {
   const [visibleModal, setVisibleModal] = useState(true);
 
   const baseStyles = {
-    width: 600,
+    width: 400,
     height: 350,
     position: "absolute",
     top: 200,
@@ -43,7 +43,6 @@ const ProjectInformationModal = () => {
       </button>
       <div style={{}}>This project is updated from <a target="_blank" href="https://github.com/cvdlab/react-planner">https://github.com/cvdlab/react-planner</a></div>
       <div style={{}}>You can see last project through <a target="_blank" href="https://cvdlab.github.io/react-planner/">https://cvdlab.github.io/react-planner</a></div>
-      <img src="https://i.ibb.co/Ybn59jr/preview.png" width={500} alt="Preview Image"/>
     </div>
   )
 }
