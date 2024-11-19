@@ -76,7 +76,6 @@ export default class OverlayInput extends Component {
 
     return (
       <div style={{ position: 'relative' }}>
-        <label style={{display: "none"}}></label>
         <input
           type="text"
           value={currValue}
