@@ -4,7 +4,7 @@ import * as SharedStyle from '../../shared-style';
 
 const toggleButtonStyle = {
   width: '5.5em',
-  color: '#CCC',
+  // color: '#CCC',
   textAlign: 'center',
   cursor: 'pointer',
   userSelect: 'none',
@@ -16,7 +16,7 @@ const toggleButtonStyle = {
 
 const toggleButtonStyleOver = {
   ...toggleButtonStyle,
-  backgroundColor: '#1c82c6',
+  // backgroundColor: '#1c82c6',
   border: '1px solid #FFF',
   color: SharedStyle.COLORS.white
 };
